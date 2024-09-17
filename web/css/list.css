@@ -1,0 +1,764 @@
+.body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+
+.car-card {
+    width: 300px; 
+    height: 450px; 
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    background-color: white;
+    transition: transform 0.2s;
+
+}
+
+.car-card img {
+    width: 100%; 
+    height: 200px; 
+    object-fit: cover; 
+}
+
+.car-card h3, .car-card p {
+    margin: 10px 0;
+}
+
+.rent-button {
+    margin-top: auto; 
+}
+
+.car-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+
+.car-card img {
+
+    width: 80%; 
+    height: auto; 
+    max-height: 200px; 
+    object-fit: cover; 
+}
+
+.car-card h3 {
+    margin: 15px 0;
+}
+
+.car-card p {
+    color: #666;
+    margin: 0 15px 15px;
+}
+
+.car-card button {
+    background-color: #007bff;
+    border: none;
+    color: white;
+    padding: 10px;
+    width: 100%;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.car-card button:hover {
+    background-color: #0056b3;
+}
+
+.car-card:hover {
+    transform: scale(1.05);
+}
+
+#footer-bottom {
+    background-color: #333;
+    color: #fff;
+    padding: 20px 0;
+    font-size: 14px;
+}
+
+#footer-bottom .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+#footer-bottom .row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#footer-bottom .col-md-4, #footer-bottom .col-sm-6 {
+    flex: 1;
+    min-width: 300px;
+    margin-bottom: 15px;
+}
+
+#footer-bottom .Shipping {
+    text-align: left;
+}
+
+#footer-bottom .copyright {
+    text-align: right;
+}
+
+#footer-bottom a {
+    color: #007bff;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+#footer-bottom a:hover {
+    color: #0056b3;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    #footer-bottom .Shipping, #footer-bottom .copyright {
+        text-align: center;
+    }
+}
+
+/* Add space below the car cards */
+.car-list {
+    margin-bottom: 50px; /* Adjust the value as needed */
+}
+
+#footer {
+    background-color: #222;
+    color: #fff;
+    padding: 30px 0; /* Reduced padding */
+    font-size: 14px; /* Ensured smaller text */
+}
+
+#footer .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+#footer .row {
+    margin: 0 -15px;
+}
+
+#footer .footer-top-area {
+    padding-bottom: 15px; /* Reduced padding */
+}
+
+#footer .footer-menu {
+    margin-bottom: 15px; /* Reduced margin */
+}
+
+#footer .footer-menu img {
+    max-width: 150px;
+    margin-bottom: 10px; /* Reduced margin */
+}
+
+#footer .footer-menu p {
+    font-size: 13px; /* Slightly smaller font */
+    line-height: 1.5;
+    margin-bottom: 10px; /* Reduced margin */
+}
+
+#footer .footer-menu h5 {
+    font-size: 15px; /* Slightly smaller heading */
+    margin-bottom: 10px; /* Reduced margin */
+}
+
+#footer .footer-menu .menu-list .menu-item {
+    margin-bottom: 8px; /* Reduced spacing between items */
+}
+
+#footer .footer-menu .menu-list .menu-item a {
+    color: #ccc;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+#footer .footer-menu .menu-list .menu-item a:hover {
+    color: #fff;
+}
+
+#footer .contact-item p {
+    font-size: 13px; /* Slightly smaller font */
+    line-height: 1.5;
+    margin-bottom: 8px; /* Reduced margin */
+}
+
+#footer hr {
+    border-top: 1px solid #444;
+    margin: 10px 0 0; /* Reduced margin */
+}
+
+#footer-bottom {
+    background-color: #333;
+    color: #fff;
+    padding: 15px 0; /* Reduced padding */
+    font-size: 13px; /* Slightly smaller text */
+}
+
+#footer-bottom .row {
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+#footer-bottom .col-md-4, #footer-bottom .col-sm-6 {
+    flex: 1;
+    min-width: 280px;
+    margin-bottom: 10px; /* Reduced margin */
+}
+
+#footer-bottom .Shipping {
+    text-align: left;
+}
+
+#footer-bottom .copyright {
+    text-align: right;
+}
+
+#footer-bottom a {
+    color: #007bff;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+#footer-bottom a:hover {
+    color: #0056b3;
+}
+
+@media (max-width: 768px) {
+    #footer-bottom .Shipping, #footer-bottom .copyright {
+        text-align: center;
+    }
+}
+
+/* Responsive adjustments for the footer */
+@media (max-width: 768px) {
+    #footer .row.d-flex {
+        flex-direction: column;
+    }
+
+    #footer .col-lg-3,
+    #footer .col-lg-2 {
+        text-align: center;
+    }
+
+    #footer .social-links ul {
+        justify-content: center;
+    }
+
+    #footer .footer-menu h5,
+    #footer .contact-item h5 {
+        text-align: center;
+    }
+}
+/* Header Styles */
+.header {
+    background-color: #fff; /* Adjust as needed */
+    padding: 15px 0;
+    border-bottom: 1px solid #eaeaea; /* Optional: add border at the bottom */
+}
+
+.header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header .logo {
+    font-family: 'Jost', sans-serif;
+    font-weight: 500;
+    font-size: 24px;
+    color: #333; /* Adjust as needed */
+    text-decoration: none;
+}
+
+.nav-bar ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 20px; /* Space between nav items */
+}
+
+.nav-bar ul li a {
+    text-decoration: none;
+    font-family: 'Lato', sans-serif;
+    font-weight: 400;
+    color: #333; /* Adjust as needed */
+    font-size: 16px;
+    transition: color 0.3s ease;
+}
+
+.nav-bar ul li a:hover {
+    color: #007bff; /* Change to your primary color */
+}
+
+.header-icons a {
+    margin-left: 20px;
+    color: #333; /* Adjust as needed */
+    font-size: 20px;
+    transition: color 0.3s ease;
+}
+
+.header-icons a:hover {
+    color: #007bff; /* Change to your primary color */
+}
+
+.header-icons .icon {
+    width: 20px;
+    height: 20px;
+}
+
+
+.header {
+    background-color: #f8f9fa; /* Example background color */
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.container {
+    width: 90%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #333;
+    margin-right: auto; /* Pushes the nav bar and icons to the right */
+}
+
+.nav-bar {
+    margin-right: 20px;
+}
+
+.nav-bar ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+.nav-bar li {
+    margin-right: 15px;
+}
+
+.nav-bar a {
+    text-decoration: none;
+    color: #333;
+    font-size: 16px;
+}
+
+.header-icons {
+    display: flex;
+    align-items: center;
+}
+
+.header-icons a {
+    display: inline-block;
+    margin-left: 15px;
+    color: #333; /* Color for the icons */
+    text-decoration: none;
+}
+
+.header-icons .icon {
+    width: 24px; 
+    height: 24px;
+    fill: currentColor; 
+}
+.nav-bar {
+    margin-right: 30px; }
+
+.card-section {
+    margin-top: 40px; 
+}
+
+//////////////////////////////////
+/* Hidden state for the search input */
+#search-form {
+    width: 0;
+    overflow: hidden;
+    transition: width 0.4s ease-in-out;
+    margin-right: 15px;
+    display: inline-block; /* Ensure it stays in line with other elements */
+    vertical-align: middle;
+}
+
+#search-input {
+    border: none;
+    outline: none;
+    padding: 0.5rem;
+    font-size: 1rem;
+    width: 200px; /* Define width but it's hidden initially */
+    border-radius: 50px; /* Makes the search box have circular ends */
+
+}
+
+/* Hide input field visually, but keep it in the document flow */
+#search-form:not(.active) #search-input {
+    width: 0;
+    padding: 0;
+}
+
+/* Expanded state */
+#search-form.active {
+    width: 200px; /* Width of the expanded search bar */
+}
+
+.icon {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+}
+
+.header-content {
+    padding: 1rem 0;
+}
+
+.nav-bar ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 1rem;
+}
+
+.nav-bar a {
+    text-decoration: none;
+    color: #333;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+    text-decoration: none;
+}
+
+/* 2. Billboard
+/*----------------------------------------------*/
+/*------------Swiper Arrow -----------*/
+#billboard .swiper-arrow {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+}
+.swiper-icon.swiper-arrow svg {
+    fill: var(--light-gray-color);
+}
+.swiper-icon.swiper-arrow:hover svg,
+.swiper-icon.swiper-arrow:focus svg {
+    fill: var(--primary-color);
+}
+#billboard .swiper-arrow.swiper-arrow-prev {
+    left: 0;
+}
+#billboard .swiper-arrow.swiper-arrow-next {
+    right: 0;
+}
+
+@media only screen and (max-width: 767px) {
+  #billboard .banner-content {
+      margin-top: 210px;
+  }
+  #billboard .image-holder {
+      margin-top: -390px;
+      opacity: 0.3;
+  }
+  #billboard .swiper-arrow {
+      top: 400px;
+  }
+}
+
+
+/* 3. Icon Box - Company Services
+/*----------------------------------------------*/
+.icon-box .icon-box-icon svg {
+    width: 26px;
+    height: 26px;
+    fill: var(--primary-color);
+}
+
+@media only screen and (max-width: 991px) {
+  #company-services .icon-box {
+    flex-wrap: wrap;
+  }
+}
+
+
+/* ----------- Pagination -----------*/
+.paging-navigation .pagination .page-numbers {
+    font-size: 1.4em;
+    color: var(--gray-color-500);
+}
+.paging-navigation .pagination .page-numbers:hover {
+    color: var(--primary-color);
+}
+.paging-navigation .pagination svg {
+    width: 35px;
+}
+
+/*------------Swiper Pagination -----------*/
+.product-store .swiper-pagination.swiper-pagination-clickable.swiper-pagination-bullets.swiper-pagination-horizontal {
+    bottom: 35px;
+}
+.swiper-pagination span.swiper-pagination-bullet {
+    width: 15px;
+    height: 15px;
+}
+
+.btn-left {
+  text-align: left;
+  display: block;
+}
+.btn-center {
+  text-align: center;
+  display: block;
+}
+.btn-right {
+  text-align: right;
+  display: block;
+}
+
+/* 7. Cart Icon (formerly Instagram) */
+#instagram figure.instagram-item {
+    width: 20%;
+}
+figure.instagram-item img.insta-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.instagram-item .icon-overlay {
+    top: 30px;
+    left: 0;
+    width: 100%;
+    height: auto;
+    color: var(--light-color);
+    opacity: 0;
+    transition: 0.9s ease-out;
+}
+.instagram-item:hover .icon-overlay {
+    top: 0;
+    opacity: 1;
+}
+.instagram-item .icon-overlay svg.cart {
+    height: 50px;
+}
+
+@media only screen and (max-width: 767px) {
+  #instagram figure.instagram-item {
+      width: 30%;
+  }
+}
+
+@media only screen and (max-width: 501px) {
+  #instagram figure.instagram-item {
+      width: 100%;
+  }
+}
+
+
+/* 5. Testimonial
+/*----------------------------------------------*/
+.review-item blockquote {
+    font-size: 2.5em;
+    font-weight: 300;
+    line-height: 1.2;
+}
+.rating svg.star {
+    width: 16px;
+    height: 16px;
+    fill: var(--primary-color);
+}
+#testimonials .swiper-arrow svg {
+    width: 45px;
+    height: 45px;
+    fill: var(--light-gray-color);
+}
+.review-content .swiper-arrow {
+    top: 0;
+    bottom: 0;
+    z-index: 2;
+}
+.review-content .swiper-arrow.swiper-arrow-next {
+    right: 0;
+}
+.review-content .quotation svg.quote {
+    color: var(--light-blue-color);
+}
+
+@media only screen and (max-width: 767px) {
+  #testimonials blockquote {
+      font-size: 2em;
+  }
+  .review-content .swiper-arrow {
+      bottom: -420px;
+  }
+}
+
+
+
+.tab-content {
+    display: none;
+}
+.active-tab {
+    display: block;
+}
+.tabs-menu {
+    margin-top: 20px;
+    padding: 10px;
+}
+.tabs-menu a {
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+/* Tabs Container */
+.tab-container {
+    display: flex;
+    justify-content: center; /* Center tabs horizontally */
+    gap: 20px; /* Space between tabs */
+    margin-top: 20px; /* Space between the header and tabs */
+    padding: 0;
+    background-color: #f8f9fa; /* Match header background */
+    border-bottom: 1px solid #ddd; /* Optional border */
+}
+
+/* Tab Links */
+.tab-link {
+    display: inline-block;
+    padding: 10px 20px;
+    font-family: 'Lato', sans-serif; /* Match the header font */
+    font-weight: 500;
+    font-size: 16px;
+    color: #333;
+    text-decoration: none;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    cursor: pointer;
+    border-bottom: 3px solid transparent; /* For active tab indicator */
+}
+
+/* Hover state for tab links */
+.tab-link:hover {
+    background-color: #eaeaea; /* Slight hover effect */
+    color: #007bff; /* Primary color on hover */
+}
+
+/* Active Tab */
+.tab-link.active {
+    color: #007bff; /* Primary color for active tab */
+    border-bottom: 3px solid #007bff; /* Underline active tab with primary color */
+    background-color: #fff; /* Highlight active tab */
+}
+
+/* Tab Content */
+.tab-content {
+    display: none;
+    padding: 20px;
+    background-color: #fff; /* Background for content */
+    border: 1px solid #ddd; /* Optional border around content */
+    margin-top: -1px; /* Slight overlap with active tab underline */
+}
+
+/* Show active tab content */
+.tab-content.active-tab {
+    display: block;
+}
+
+
+/* Default hidden tab content */
+.tab-content {
+    display: none;
+}
+
+/* Show active tab content */
+.active-tab {
+    display: block;
+}
+
+/* Style for active tab */
+.tab-link.active {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+}
+
+/* Hide all tab contents by default */
+.tab-content {
+    display: none;
+}
+
+/* Show the content of the active tab */
+.active-tab {
+    display: block;
+}
+
+/* Style for the active tab link */
+.tab-link.active {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+#chartContainer, #otherContent {
+display: none;
+}
+#chartContainer.active, #otherContent.active {
+display: block;
+}
+
+.table.no-border {
+    border-collapse: collapse;
+}
+
+.table.no-border td,
+.table.no-border th {
+    border: none;
+}
+
+   .vehicle-details {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .vehicle-details img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+        }

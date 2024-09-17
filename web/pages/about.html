@@ -1,0 +1,130 @@
+<head>
+    <title>SS Car Rentals</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="author" content="">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/list.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <!-- script ================================================== -->
+    <script src="../js/modernizr.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+<body data-bs-spy="scroll" data-bs-target="#navbar" data-bs-root-margin="0px 0px -40%" data-bs-smooth-scroll="true" tabindex="0">
+<svg style="display: none;">
+    <symbol id="search" viewBox="0 0 24 24">
+        <!-- SVG path data for search icon -->
+        <path d="M23.7 22.3l-6.6-6.6c1.2-1.5 2-3.4 2-5.5 0-4.9-4-8.9-8.9-8.9S1.3 5.3 1.3 10.2s4 8.9 8.9 8.9c2.1 0 4-0.8 5.5-2l6.6 6.6c0.2 0.2 0.5 0.3 0.7 0.3s0.5-0.1 0.7-0.3c0.4-0.4 0.4-1 0-1.4zM2.8 10.2C2.8 6.5 6.1 3.2 9.8 3.2s7 3.3 7 7-3.3 7-7 7-7-3.3-7-7z"/>
+    </symbol>
+    <symbol id="user" viewBox="0 0 24 24">
+        <!-- SVG path data for user icon -->
+        <path d="M12 12c2.8 0 5-2.2 5-5s-2.2-5-5-5-5 2.2-5 5 2.2 5 5 5zM12 14c-3.3 0-10 1.7-10 5v2h20v-2c0-3.3-6.7-5-10-5z"/>
+    </symbol>
+  <symbol id="logout" viewBox="0 0 24 24">
+    <path d="M16 13v-2h-4V7h4V5H8v14h8v-2h-4v-4h4zm-6-1h10v-2H10V8l-5 4 5 4v-3z"/>
+</symbol>
+
+<symbol id="cart" viewBox="0 0 24 24">
+    <path d="M7 18c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2zm10 0c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2zM7 6h13v2h-1l-1.1 6H9.1l-.24-1.34L7 6zM1 2h4l1.68 9.33L5.24 14H18v2H5c-.89 0-1.67-.61-1.88-1.48L1 2z"/>
+</symbol>
+  </svg>
+  <body>
+<header class="header">
+    <div class="container">
+        <div class="header-content d-flex justify-content-between align-items-center">
+            <a href="#" class="logo">SS Rentals</a>
+            <nav class="nav-bar">
+                <ul class="d-flex list-unstyled mb-0">
+                    <li class="mr-3"><a href="#home">Home</a></li>
+                    <li class="mr-3"><a href="#about">About</a></li>
+                    <li class="mr-3"><a href="#services">My rentals</a></li>
+                </ul>
+            </nav>
+            <div class="header-icons d-flex align-items-center">
+                <form id="search-form" class="form-inline">
+                    <input id="search-input" class="form-control" type="search" placeholder="Search...">
+                </form>
+                <a href="#" id="search-icon" class="ml-3">
+                    <svg class="icon"><use xlink:href="#search"></use></svg>
+                </a>
+                <a href="#" class="ml-3"><svg class="icon"><use xlink:href="#user"></use></svg></a>
+                <a href="#" class="ml-3"><svg class="icon"><use xlink:href="#cart"></use></svg></a>
+                <a href="#" class="ml-3"><svg class="icon"><use xlink:href="#logout"></use></svg></a>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+  <section class="card-section">
+        <div id="car-list" class="car-list"></div>
+
+</section>
+
+
+     <div id="footer-bottom">
+    <div class="container">
+      <div class="row d-flex flex-wrap justify-content-between">
+        
+        <div class="col-md-4 col-sm-6">
+          <div class="Shipping d-flex">
+            <p>Edited by: Senzosenkosi Shongwe 201603562</p>
+          </div>
+        </div>
+            <div class="col-lg-2 col-sm-6 pb-3">
+              <div class="footer-menu text-uppercase">
+                <h5 class="widget-title pb-2">Quick Links</h5>
+                <ul class="menu-list list-unstyled text-uppercase">
+                  <li class="menu-item pb-2">
+                    <a href="#">Home</a>
+                  </li>
+                  <li class="menu-item pb-2">
+                    <a href="#">About</a>
+                  </li>
+                  <li class="menu-item pb-2">
+                    <a href="#">My rentals</a>
+                  </li>
+              
+                </ul>
+              </div>
+            </div>
+                <div class="col-lg-3 col-sm-6 pb-3">
+              <div class="footer-menu contact-item">
+                <h5 class="widget-title text-uppercase pb-2">Contact Us</h5>
+                <p>Do you have any queries or suggestions? <a href="mailto:">info@mavis.com</a>
+                </p>
+                <p>If you need support? Just give us a call. <a href="">+27792661157</a>
+                </p>
+              </div>
+            </div>
+      
+        <div class="col-md-4 col-sm-6">
+          <div class="copyright">
+            <p>© Copyright 2023 MiniStore. Design by <a href="https://templatesjungle.com/">TemplatesJungle</a> Distribution by <a href="https://themewagon.com">ThemeWagon</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/cars.js"></script>
+  <script src="../js/jquery-1.11.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+  <script type="text/javascript" src="../js/bootstrap.bundle.min.js"></script>
+  <script type="text/javascript" src="../js/plugins.js"></script>
+</body>
+</html>

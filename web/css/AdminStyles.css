@@ -1,0 +1,59 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    display: flex;
+}
+
+.sidebar {
+    width: 250px;
+    background-color: #333;
+    color: #fff;
+    padding: 15px;
+    height: 100vh;
+    position: fixed; 
+    top: 0;
+    left: 0;
+}
+
+.sidebar h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    margin: 10px 0;
+}
+
+.sidebar ul li a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.sidebar ul li a:hover {
+    text-decoration: underline;
+}
+
+.main-content {
+    margin-left: 250px; 
+    padding: 20px;
+    flex-grow: 1;
+}
+
+#stats-content {
+    margin-top: 20px;
+}
+
+form input.form-control, form select.form-select {
+    border: 1px solid black; 
+    box-shadow: none; 
+}
+
+form input.form-control:focus, form select.form-select:focus {
+    border-color: black; 
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3); 
+}
