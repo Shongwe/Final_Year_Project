@@ -1,15 +1,27 @@
 document.addEventListener('DOMContentLoaded', function () {
     const token = localStorage.getItem('token');
     const userRole = localStorage.getItem('role');
-    
+
     if (!token || !userRole) {
         window.location.href = '../pages/login.html';
-    } else if (userRole !== 'User') {
+    } else if (userRole !== 'Manager' && userRole !== 'Admin' && userRole !== 'User') {
         window.location.href = '../pages/index.html';
     } else {
         validateToken(token);
+        setupAccountIcons();
     }
+
+    document.getElementById('search-icon').addEventListener('click', function(event) {
+        event.preventDefault();
+        var searchForm = document.getElementById('search-form');
+        searchForm.classList.toggle('active');
+
+        if (searchForm.classList.contains('active')) {
+            document.getElementById('search-input').focus();
+        }
+    });
 });
+
 
 function validateToken(token) {
     const payload = JSON.parse(atob(token.split('.')[1]));
@@ -21,6 +33,41 @@ function validateToken(token) {
         localStorage.removeItem('token'); 
         window.location.href = '../pages/login.html';
     }
+}
+
+function setupAccountIcons() {
+    const isLoggedIn = !!localStorage.getItem('token');
+    const iconContainer = document.getElementById('account-icon-container');
+
+    if (isLoggedIn) {
+        iconContainer.innerHTML = `<a href="../pages/profile.html" class="ml-3">
+                <svg class="icon">
+                    <use xlink:href="#user"></use>
+                </svg>
+            </a>
+            <a href="../pages/cart.html" class="ml-3">
+                <svg class="icon">
+                    <use xlink:href="#cart"></use>
+                </svg>
+            </a>
+            <a href="#" onclick="logout()">
+                <svg class="icon">
+                    <use href="#logout"></use>
+                </svg>
+            </a>`;
+    } else {
+        iconContainer.innerHTML = `
+            <a href="../pages/login.html">
+                <svg class="icon">
+                    <use href="#user"></use>
+                </svg>
+            </a>`;
+    }
+}
+
+function logout() {
+    localStorage.removeItem('token');
+    window.location.href = '../index.html';
 }
 
 $(document).ready(function () {

@@ -133,7 +133,7 @@ function setupAccountIcons() {
                     <use xlink:href="#user"></use>
                 </svg>
             </a>
-            <a href="/cart.html" class="ml-3">
+            <a href="../pages/cart.html" class="ml-3">
                 <svg class="icon">
                     <use xlink:href="#cart"></use>
                 </svg>
@@ -155,5 +155,5 @@ function setupAccountIcons() {
 
 function logout() {
     localStorage.removeItem('token');
-    window.location.href = '/index.html';
+    window.location.href = '../index.html';
 }

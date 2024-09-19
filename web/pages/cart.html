@@ -84,6 +84,23 @@
         font-weight: bold;
         margin-bottom: 20px;
     }
+
+    #cart-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#cart-table th, #cart-table td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.cart-item-image {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+}
 </style>   
 </head>
 <body data-bs-spy="scroll" data-bs-target="#navbar" data-bs-root-margin="0px 0px -40%" data-bs-smooth-scroll="true" tabindex="0">
@@ -183,7 +200,6 @@
 
 <section class="card-section">
   <div class="container">
-    <h1>Your Cart</h1>
     <table id="cart-table">
         <thead>
             <tr>
@@ -192,6 +208,8 @@
                 <th>Price</th>
                 <th>Start Date</th>
                 <th>End Date</th>
+                <th>Days</th>
+                <th>Total</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -199,7 +217,7 @@
         </tbody>
     </table>
     <div class="total">
-        <span>Total Price: $<span id="total-price">0.00</span></span>
+        <span>Grand Total Price: <span id="total-price">0.00</span></span>
     </div>
     <button id="checkout-btn">Checkout</button>
 </div>
