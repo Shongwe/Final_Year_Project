@@ -267,13 +267,17 @@ namespace Web_API.Controllers
             if (!string.IsNullOrEmpty(keyword))
             {
                 query = query.Where(i =>
-                    (i.Make.Contains(keyword) ||
-                     i.Registration.Contains(keyword) ||
+                    (i.Name.Contains(keyword) ||
+                     i.Make.Contains(keyword) ||
                      i.Model.Contains(keyword) ||
                      i.Category.Contains(keyword) ||
-                     i.AdditionalFeatures.Contains(keyword)) &&
-                    i.Deleted != 1);
+                     i.Registration.Contains(keyword) ||
+                     i.AdditionalFeatures.Contains(keyword)) ||
+                     i.Colors.Contains(keyword) &&
+                     i.Deleted != 1);
             }
+
+            query = query.OrderBy(i => i.DailyRate);
 
             var items = await query.ToListAsync();
             return Ok(items);

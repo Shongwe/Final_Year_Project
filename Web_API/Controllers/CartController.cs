@@ -289,25 +289,35 @@ namespace Web_API.Controllers
         [HttpGet("{userId}/invoice")]
         public async Task<IActionResult> GetInvoice(string userId)
         {
-            var cart = await _dataContext.Carts
-                                          .Include(c => c.Cartitems)
-                                          .ThenInclude(ci => ci.Vehicle) 
-                                          .FirstOrDefaultAsync(c => c.UserId == userId && c.Status == "Pending");
+         
+            var carts = await _dataContext.Carts
+                               .Include(c => c.Cartitems)
+                               .ThenInclude(ci => ci.Vehicle)
+                               .Where(c => c.UserId == userId && c.Status == "Pending")
+                               .OrderByDescending(c => c.CreatedDate)
+                               .ToListAsync();
 
-            if (cart == null)
+            if (carts == null || carts.Count == 0)
             {
                 return NotFound(new { message = "No pending cart found for this user." });
             }
 
-            var invoiceItems = cart.Cartitems.Select(ci => new
+            var invoiceItems = carts.Select(cart => new
             {
-                vehicleId = ci.VehicleId,
-                vehicleName = ci.Vehicle?.Name, 
-                vehicleRegistration = ci.Vehicle?.Registration,
-                startDate = ci.StartDate,
-                endDate = ci.EndDate,
-                dailyRate = ci.DailyRate,
-                totalPrice = ci.TotalPrice
+                cartId = cart.CartId,
+                status=cart.Status,
+                createdDate=cart.CreatedDate,
+                userId =cart.UserId,
+                cartItems = cart.Cartitems.Select(ci => new
+                {
+                    vehicleId = ci.VehicleId,
+                    vehicleName = ci.Vehicle?.Name,
+                    vehicleRegistration = ci.Vehicle?.Registration,
+                    startDate = ci.StartDate,
+                    endDate = ci.EndDate,
+                    dailyRate = ci.DailyRate,
+                    totalPrice = ci.TotalPrice
+                }).ToList()
             }).ToList();
 
             return Ok(new { cartItems = invoiceItems });

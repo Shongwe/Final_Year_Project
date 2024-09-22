@@ -1,61 +1,37 @@
 <head>
-  <title>SS Car Rentals</title>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="format-detection" content="telephone=no">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="author" content="">
-  <meta name="keywords" content="">
-  <meta name="description" content="">
+    <title>SS Car Rentals</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="author" content="">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
 
-  <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
-  <link rel="stylesheet" type="text/css" href="../css/list.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
-  <!-- script ================================================== -->
-  <script src="../js/modernizr.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/list.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <!-- script ================================================== -->
+    <script src="../js/modernizr.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-      .vehicle-details {
-          display: table;
-          width: 100%;
-          border-collapse: separate;
-          border-spacing: 20px;
-      }
-      .vehicle-details img {
-          max-width: 100%;
-          height: auto;
-      }
-      .vehicle-details td {
-          vertical-align: top;
-      }
-      .card-section {
-          margin: 20px;
-      }
-      table {
-          width: 100%;
-          border-collapse: collapse;
-      }
-      table td {
-          padding: 10px;
-      }
-      .rent-button {
-          background-color: #007bff;
-          color: white;
-          border: none;
-          border-radius: 5px;
-          padding: 10px 20px;
-          font-size: 16px;
-          cursor: pointer;
-          margin-top: 20px;
-      }
-      .rent-button:hover {
-          background-color: #0056b3;
-      }
-  </style>
+        #invoice-items {
+      display: block;
+  }
+  .table {
+      width: 100%;
+  }
+  #invoice-items .cart-wrapper {
+      display: block;
+      margin-bottom: 30px; 
+  }
+      </style>
 
 </head>
 <body data-bs-spy="scroll" data-bs-target="#navbar" data-bs-root-margin="0px 0px -40%" data-bs-smooth-scroll="true" tabindex="0">
@@ -158,53 +134,26 @@
     </div>
 </header>
 
-<section class="card-section">
-    <div class="vehicle-details">
-  <table>
-      <tr>
-          <td><img id="vehicle-image" src="" alt="Vehicle Image"></td>
-          <td>
-              <h1 id="vehicle-name"></h1>
-              <p><strong>Registration:</strong> <span id="vehicle-registration"></span></p>
-              <p><strong>Make:</strong> <span id="vehicle-make"></span></p>
-              <p><strong>Model:</strong> <span id="vehicle-model"></span></p>
-              <p><strong>Category:</strong> <span id="vehicle-category"></span></p>
-              <p><strong>Colors:</strong> <span id="vehicle-colors"></span></p>
-              <p><strong>Number of Seats:</strong> <span id="vehicle-seats"></span></p>
-              <p><strong>Mileage:</strong> <span id="vehicle-mileage"></span></p>
-              <p><strong>Year:</strong> <span id="vehicle-year"></span></p>
-              <p><strong>Additional Features:</strong> <span id="vehicle-additional-features"></span></p>
-              <p><strong>Daily Rate:</strong> R<span id="vehicle-daily-rate"></span></p>
-              <p><strong>Description:</strong> <span id="vehicle-description"></span></p>
-          </td>
-      </tr>
-  </table>
-  <div class="card">
-    <div class="card-body">
-      <h2>Update item in cart</h2>
-      <table>
-        <tr>
-          <td>
-            <label for="start-date">Start Date:</label>
-            <input type="date" id="start-date" name="start-date">
-          </td>
-          <td>
-            <label for="end-date">End Date:</label>
-            <input type="date" id="end-date" name="end-date">
-          </td>
-        </tr>
-      </table>
-        <div id="error-message" class="error-message" style="color: red; display: none;"></div>
-      <button class="rent-button" id="rent-now-button">Update</button>
-    </div>
+
+
+
+
+<div id="invoice" class="container mt-5">
+    <div class="text-center mt-4">
+        <button id="download-pdf" class="btn btn-primary mr-2">Download PDF</button>
+        <button id="done-btn" class="btn btn-secondary">Done</button>
+      </div>
+    
+    <div id="invoice-items" class="container"></div> 
+  
+   
   </div>
-  <button class="rent-button" id="back-button">Back</button>
-</div>
-</section>
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.6.0/jspdf.umd.min.js"></script>
+  
 
 
-
-<div id="footer-bottom">
+     <div id="footer-bottom">
     <div class="container">
       <div class="row d-flex flex-wrap justify-content-between">
         
@@ -255,7 +204,7 @@
   <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
   <script type="text/javascript" src="../js/bootstrap.bundle.min.js"></script>
   <script type="text/javascript" src="../js/plugins.js"></script>
-  <script src="../js/editItem.js"></script>
+  <script src="../js/myrentals.js"></script>
 
 </body>
 </html>

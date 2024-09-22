@@ -1,3 +1,76 @@
+document.addEventListener('DOMContentLoaded', function () {
+    const token = localStorage.getItem('token');
+    const userRole = localStorage.getItem('role');
+
+    if (!token || !userRole) {
+        window.location.href = '../pages/login.html';
+    } else if (userRole !== 'Manager' && userRole !== 'Admin' && userRole !== 'User') {
+        window.location.href = '../pages/index.html';
+    } else {
+        validateToken(token);
+        setupAccountIcons();
+    }
+
+    const searchIcon = document.getElementById('search-icon');
+    const clearSearchButton = document.getElementById('clear-search');
+    
+    searchIcon.addEventListener('click', async function(event) {
+        event.preventDefault();
+        var searchForm = document.getElementById('search-form');
+        searchForm.classList.toggle('active');
+    
+        if (searchForm.classList.contains('active')) {
+            console.log("Search form activated");
+            document.getElementById('search-input').focus();
+        } else {
+            const searchInput = document.getElementById('search-input').value.trim();
+            if (searchInput !== '') {
+                console.log(`Searching for: ${searchInput}`);
+    
+                const token = localStorage.getItem('token'); 
+    
+                const headers = {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                };
+    
+                try {
+                    const response = await fetch(`http://localhost/MiniProjectAPI/api/Vehicle/search?keyword=${encodeURIComponent(searchInput)}`, { headers });
+                    
+                    console.log("Fetching results...");
+    
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch search results');
+                    }
+    
+                    const vehicles = await response.json();
+                    console.log("Search results fetched", vehicles);
+                    
+                    displaySearchResults(vehicles);
+                } catch (error) {
+                    console.error('Error fetching search results:', error);
+                    alert('Failed to load search results.');
+                }
+            } else {
+                alert('Please enter a search keyword.');
+            }
+        }
+    });
+
+    document.getElementById('search-input').addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            searchIcon.click(); 
+        }
+    });
+
+    clearSearchButton.addEventListener('click', function() {
+        document.getElementById('search-results').innerHTML = '';
+        document.getElementById('search-input').value = ''; 
+        clearSearchButton.style.display = 'none'; 
+    });
+});
+
 document.addEventListener('DOMContentLoaded', async () => {
     const token = localStorage.getItem('token');
     const userId = getUserIdFromToken(token);
@@ -30,21 +103,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         invoiceContainer.innerHTML = '';  
-
-        for (let cartIndex = 0; cartIndex < carts.length; cartIndex++) {
-            const cart = carts[cartIndex];
-            
-            if (cartIndex > 0) break;  
-        
+        carts.forEach((cart, cartIndex) => {
             const cartWrapper = document.createElement('div'); 
             cartWrapper.classList.add('mb-5'); 
         
             const cartHeader = document.createElement('h3');
             console.log(cart.createdDate);
-        
+
             const formattedDate = formatDate(cart.createdDate);
-        
-            cartHeader.textContent = `Cart created on : ${formattedDate} Cart status ${cart.status}`;
+
+            cartHeader.innerHTML = `Cart created on : ${formattedDate} Cart status: <span style="color: ${getStatusColor(cart.status)};">${cart.status}</span>`;
+
             cartWrapper.appendChild(cartHeader); 
         
             const table = document.createElement('table');
@@ -82,14 +151,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         
             table.appendChild(tableBody);
-            cartWrapper.appendChild(table);
-        
-            invoiceContainer.appendChild(cartWrapper);
-        }
+            cartWrapper.appendChild(table);  
+            invoiceContainer.appendChild(cartWrapper);  
+        });
 
         downloadButton.disabled = false;
         downloadButton.addEventListener('click', () => {
-            generatePDF(carts.slice(0, 1)); 
+            generatePDF(carts);
         });
 
     } catch (error) {
@@ -104,6 +172,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         window.location.href = '../pages/index.html';
     });
 });
+
 
 function getUserIdFromToken(token) {
     const payloadBase64 = token.split('.')[1];
@@ -186,80 +255,19 @@ console.log(date);
     return formattedDate;
 }
 
-document.addEventListener('DOMContentLoaded', function () {
-    const token = localStorage.getItem('token');
-    const userRole = localStorage.getItem('role');
-
-    if (!token || !userRole) {
-        window.location.href = '../pages/login.html';
-    } else if (userRole !== 'Manager' && userRole !== 'Admin' && userRole !== 'User') {
-        window.location.href = '../pages/index.html';
-    } else {
-        validateToken(token);
-        setupAccountIcons();
+function getStatusColor(status) {
+    if (status === 'Pending') {
+      return 'orange';
+    } else if (status === 'Open') {
+      return 'blue';
+    } else if (status === 'Checked Out') {
+      return 'green';
+    } else if (status === 'Checked In') {
+      return 'red';
     }
+  }
 
-    const searchIcon = document.getElementById('search-icon');
-    const clearSearchButton = document.getElementById('clear-search');
-    
-    searchIcon.addEventListener('click', async function(event) {
-        event.preventDefault();
-        var searchForm = document.getElementById('search-form');
-        searchForm.classList.toggle('active');
-    
-        if (searchForm.classList.contains('active')) {
-            console.log("Search form activated");
-            document.getElementById('search-input').focus();
-        } else {
-            const searchInput = document.getElementById('search-input').value.trim();
-            if (searchInput !== '') {
-                console.log(`Searching for: ${searchInput}`);
-    
-                const token = localStorage.getItem('token'); 
-    
-                const headers = {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                };
-    
-                try {
-                    const response = await fetch(`http://localhost/MiniProjectAPI/api/Vehicle/search?keyword=${encodeURIComponent(searchInput)}`, { headers });
-                    
-                    console.log("Fetching results...");
-    
-                    if (!response.ok) {
-                        throw new Error('Failed to fetch search results');
-                    }
-    
-                    const vehicles = await response.json();
-                    console.log("Search results fetched", vehicles);
-                    
-                    displaySearchResults(vehicles);
-                } catch (error) {
-                    console.error('Error fetching search results:', error);
-                    alert('Failed to load search results.');
-                }
-            } else {
-                alert('Please enter a search keyword.');
-            }
-        }
-    });
-
-    document.getElementById('search-input').addEventListener('keydown', function(event) {
-        if (event.key === 'Enter') {
-            event.preventDefault();
-            searchIcon.click(); 
-        }
-    });
-
-    clearSearchButton.addEventListener('click', function() {
-        document.getElementById('search-results').innerHTML = '';
-        document.getElementById('search-input').value = ''; 
-        clearSearchButton.style.display = 'none'; 
-    });
-});
-
-function setupAccountIcons() {
+  function setupAccountIcons() {
     const isLoggedIn = !!localStorage.getItem('token');
     const iconContainer = document.getElementById('account-icon-container');
 

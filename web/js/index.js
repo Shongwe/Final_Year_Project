@@ -9,6 +9,7 @@ document.getElementById('search-icon').addEventListener('click', function(event)
 });
 
 document.addEventListener('DOMContentLoaded', () => {
+    setupAccountIcons();
     const cars = [
         {
             name: "Toyota corola",
@@ -87,14 +88,10 @@ function addToCart(car) {
     }
 }
 
-carCard.querySelector('.rent-button').addEventListener('click', () => {
-    addToCart(car);
-    window.location.href = "cart.html";  // Redirect to cart page after adding
-});
 
 
     function updateCartUI() {
-        cartItems.innerHTML = ''; // Clear the current cart items
+        cartItems.innerHTML = ''; 
 
         cart.forEach((car, index) => {
             const tr = document.createElement('tr');
@@ -123,7 +120,6 @@ carCard.querySelector('.rent-button').addEventListener('click', () => {
     document.getElementById('checkout-btn').addEventListener('click', () => {
         if (cart.length > 0) {
             alert('Proceeding to checkout with the following items: \n' + cart.map(car => `${car.name} (Total Cost: $${car.totalCost.toFixed(2)})`).join('\n'));
-            // Add your checkout logic here
         } else {
             alert('Your cart is empty.');
         }
@@ -152,3 +148,51 @@ carCard.querySelector('.rent-button').addEventListener('click', () => {
        
     }
 });
+
+function setupAccountIcons() {
+    const isLoggedIn = !!localStorage.getItem('token');
+    const iconContainer = document.getElementById('account-icon-container');
+
+    if (isLoggedIn) {
+        iconContainer.innerHTML = `
+            <a href="pages/profile.html" class="ml-3">
+                <svg class="icon">
+                    <use xlink:href="#user"></use>
+                </svg>
+            </a>
+            <a href="pages/cart.html" class="ml-3">
+                <svg class="icon">
+                    <use xlink:href="#cart"></use>
+                </svg>
+            </a>
+            <a href="#" onclick="logout()">
+                <svg class="icon">
+                    <use href="#logout"></use>
+                </svg>
+            </a>`;
+    } else {
+        iconContainer.innerHTML = `
+            <a href="pages/login.html">
+                <svg class="icon">
+                    <use href="#user"></use>
+                </svg>
+            </a>`;
+    }
+}
+
+function logout() {
+    localStorage.removeItem('token');
+    window.location.href = '../index.html';
+}
+
+function validateToken(token) {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const expTime = payload.exp * 1000;
+    const currentTime = Date.now();
+
+    if (currentTime > expTime) {
+        alert('Your session has expired. Please log in again.');
+        localStorage.removeItem('token');
+        window.location.href = '../pages/login.html';
+    }
+}

@@ -25,6 +25,9 @@
     display: flex;
     justify-content: space-around;
     margin: 20px;
+    overflow: auto; 
+    flex-wrap: wrap;
+
 }
 
 .booking-card {
@@ -34,6 +37,8 @@
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     background-color: #fff;
+    overflow: auto; 
+
 }
 
 .booking-card h2 {
@@ -53,7 +58,44 @@
 .booking-item:last-child {
     border-bottom: none;
 }
-    </style>
+    
+     #invoice-items {
+        display: block;
+    }
+    .table {
+        width: 100%;
+    }
+    #invoice-items .cart-wrapper {
+        display: block;
+        margin-bottom: 30px; 
+    }
+
+
+    #current {
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+    height: 100vh; 
+    padding: 20px; 
+    height: calc(100vh - 60px);
+    overflow: auto;
+}
+
+.booking-card {
+    width: 100%; 
+    max-width: 800px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    padding: 20px; 
+    border-radius: 8px; 
+    background-color: #fff; 
+}
+
+#invoice {
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+}
+        </style>
 
 </head>
 <body data-bs-spy="scroll" data-bs-target="#navbar" data-bs-root-margin="0px 0px -40%" data-bs-smooth-scroll="true" tabindex="0">
@@ -136,14 +178,14 @@
 <header class="header">
   <div class="container">
       <div class="header-content d-flex justify-content-between align-items-center">
-          <a href="#" class="logo">SS Rentals</a>
-          <nav class="nav-bar">
-              <ul class="d-flex list-unstyled mb-0">
-                  <li class="mr-3"><a href="#home">Home</a></li>
-                  <li class="mr-3"><a href="#about">About</a></li>
-                  <li class="mr-3"><a href="#services">My rentals</a></li>
-              </ul>
-          </nav>
+        <a href="../pages/dashboard.html" class="logo">SS Rentals</a>
+        <nav class="nav-bar">
+            <ul class="d-flex list-unstyled mb-0">
+                <li class="mr-3"><a href="../pages/dashboard.html">Home</a></li>
+                <li class="mr-3"><a href="../pages/about.html">About</a></li>
+                <li class="mr-3"><a href="../pages/myrentals.html">My rentals</a></li>
+            </ul>
+        </nav>
           <div class="header-icons d-flex align-items-center">
               <form id="search-form" class="form-inline">
                   <input id="search-input" class="form-control" type="search" placeholder="Search...">
@@ -232,9 +274,15 @@
     <div class="booking-card" id="current-bookings">
         <h2>Current Bookings</h2>
         <div class="booking-list" id="current-booking-list">
+          <div id="invoice" class="container mt-5">  
+            <div id="invoice-items" class="container"></div>          
+          </div>
+          
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.6.0/jspdf.umd.min.js"></script>        
         </div>
     </div>
 </div>
+
 <div id="history" class="tab-content">
     <div class="booking-card" id="rental-history">
         <h2>Rental History</h2>

@@ -107,16 +107,15 @@
                 </ul>
             </nav>
             <div class="header-icons d-flex align-items-center">
+              <div class="header-icons d-flex align-items-center">
                 <form id="search-form" class="form-inline">
                     <input id="search-input" class="form-control" type="search" placeholder="Search...">
                 </form>
                 <a href="#" id="search-icon" class="ml-3">
                     <svg class="icon"><use xlink:href="#search"></use></svg>
                 </a>
-                <a href="pages/login.html" class="ml-3"><svg class="icon"><use xlink:href="#user"></use></svg></a>
-                <a href="pages/about.html" class="ml-3"><svg class="icon"><use xlink:href="#about"></use></svg></a>
-                <a href="pages/cart.html" class="ml-3"><svg class="icon"><use xlink:href="#cart"></use></svg></a>
-                <a href="pages/index.html" class="ml-3"><svg class="icon"><use xlink:href="#logout"></use></svg></a>
+                <div id="account-icon-container"></div>
+            </div>
 
             </div>
         </div>
@@ -161,6 +160,10 @@
 </section>
   
 
+<section class="card-section">
+  <div id="search-results" class="car-list"></div>
+  <button id="clear-search" class="rent-button" style="display:none;">Clear Search</button>
+</section>
 
  <section id="instagram" class="padding-large overflow-hidden no-padding-top">
    <div class="container">
