@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     invoiceContainer.innerHTML = `<div class="text-center">Loading invoice data...</div>`;
 
     try {
-        const response = await fetch(`http://localhost/MiniProjectAPI/api/Cart/${userId}/invoice`, {
+        const response = await fetch(`http://localhost/MiniProjectAPI/api/Cart/${userId}/carts`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`

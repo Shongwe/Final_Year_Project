@@ -4,11 +4,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (!token || !userRole) {
         window.location.href = '../pages/login.html';
-    } else if (userRole !== 'Manager' && userRole !== 'Admin' && userRole !== 'User') {
+    } else if (userRole !== 'Manager' && userRole !== 'Admin') {
         window.location.href = '../pages/index.html';
     } else {
         validateToken(token);
-        fetchVehiclesAndCart();
         setupAccountIcons();
     }
 
@@ -88,7 +87,7 @@ async function displaySearchResults(vehicles) {
     if (vehicles.length > 0) {
         clearSearchButton.style.display = 'block'; 
     } else {
-        clearSearchButton.style.display = 'none';
+        clearSearchButton.style.display = 'none'; 
     }
 
     const token = localStorage.getItem('token'); 
@@ -138,91 +137,6 @@ async function displaySearchResults(vehicles) {
     }
 }
 
-async function fetchVehiclesAndCart() {
-    const carList = document.getElementById('car-list');
-    const cartItems = document.getElementById('cart-items');
-    const cart = [];
-
-    const token = localStorage.getItem('token');
-    const headers = new Headers();
-    headers.append('Authorization', `Bearer ${token}`);
-
-    try {
-        const response = await fetch('http://localhost/MiniProjectAPI/api/Vehicle', { headers });
-
-        if (!response.ok) {
-            throw new Error('Failed to fetch vehicles');
-        }
-
-        const vehicles = await response.json();
-
-        for (const vehicle of vehicles) {
-            const imageResponse = await fetch(`http://localhost/MiniProjectAPI/api/Vehicle/${vehicle.registration}/image`, { headers });
-
-            let imageUrl = '';
-
-            if (imageResponse.ok) {
-                imageUrl = URL.createObjectURL(await imageResponse.blob());
-            } else {
-                imageUrl = '../images/car13.jpg';
-            }
-
-            const carCard = document.createElement('div');
-            carCard.className = 'car-card';
-
-            carCard.innerHTML = `
-                <img src="${imageUrl}" alt="${vehicle.name}" style="width: 100%; height: auto;">
-                <h3>${vehicle.name}</h3>
-                <p>${vehicle.description}</p>
-                <p>Daily Rate: R${vehicle.dailyRate}</p>
-                <button class="rent-button" data-vehicle-id="${vehicle.id}">Rent Now</button>
-            `;
-
-            carCard.addEventListener('click', (event) => {
-                window.location.href = `single_car.html?registration=${encodeURIComponent(vehicle.registration)}`;
-            });
-
-            const rentButton = carCard.querySelector('.rent-button');
-            rentButton.addEventListener('click', (event) => {
-                event.stopPropagation();
-                addToCart(vehicle);
-            });
-
-            carList.appendChild(carCard);
-        }
-
-    } catch (error) {
-        console.error('Error fetching vehicles:', error);
-        alert('Failed to load vehicles.');
-    }
-
-    function loadCart() {
-        const savedCart = JSON.parse(localStorage.getItem('cart'));
-        if (savedCart) {
-            cart.push(...savedCart); 
-            updateCartDisplay();
-        }
-    }
-
-            function addToCart(car) {
-        cart.push(car);
-        localStorage.setItem('cart', JSON.stringify(cart)); 
-        updateCartDisplay();
-        alert(`${car.name} has been added to the cart.`);
-    }
-
-    function updateCartDisplay() {
-        cartItems.innerHTML = cart.map(car => `
-            <div class="cart-item">
-                <h4>${car.name}</h4>
-                <p>Daily Rate: R${car.dailyRate}</p>
-            </div>
-        `).join('');
-    }
-
-    loadCart();
-}
-
 function setupAccountIcons() {
     const isLoggedIn = !!localStorage.getItem('token');
     const iconContainer = document.getElementById('account-icon-container');
@@ -270,3 +184,38 @@ function validateToken(token) {
         window.location.href = '../pages/login.html';
     }
 }
+
+$(document).ready(function () {
+    var activeTab = localStorage.getItem('activeTab');
+    if (activeTab) {
+        $('.tab-link').removeClass('active');
+        $('.tab-content').removeClass('active-tab');
+        $('.tab-link[data-tab="' + activeTab + '"]').addClass('active');
+        $('#' + activeTab).addClass('active-tab');
+    }
+    else{
+        $('.tab-link[data-tab="checkin"]').addClass('active');
+        $('#checkin').addClass('active-tab');
+    }
+    
+    $('.tab-link').on('click', function (e) {
+        var href = $(this).attr('href');
+        
+        if (href === "" || href === "#") {
+            e.preventDefault();
+            $('.tab-link').removeClass('active');
+            $('.tab-content').removeClass('active-tab');
+          
+            $(this).addClass('active');
+            var tab = $(this).data('tab');
+            $('#' + tab).addClass('active-tab');
+            localStorage.setItem('activeTab', tab);
+        }
+        else
+        {
+            var tab = $(this).data('tab');
+            localStorage.setItem('activeTab', tab);
+        }
+    });
+});
+

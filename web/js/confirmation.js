@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     doneButton.addEventListener('click', () => {
-        window.location.href = '../pages/index.html';
+        window.location.href = '../pages/dashboard.html';
     });
 });
 

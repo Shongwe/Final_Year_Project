@@ -200,13 +200,13 @@
 </header>
 
 <div class="tabs-menu">
-    <a href="" class="tab-link" data-tab="profile">Update profile</a>
-    <a href="" class="tab-link" data-tab="current">Current Bookings</a>
-    <a href="" class="tab-link" data-tab="history">Rental history </a>
+  <a href="../pages/profile.html" class="tab-link" data-tab="profile">Update profile</a>
+  <a href="../pages/currentRentals.html" class="tab-link" data-tab="current">Current Bookings</a>
+  <a href="../pages/rentalHistory.html" class="tab-link" data-tab="history">Rental history</a>
 </div>
-<section id="billboard" class="position-relative overflow-hidden bg-light-blue" style="min-height: calc(100vh - 200px);">
-    <div id="profile" class="tab-content active-tab">
-    <div class="swiper main-swiper">
+
+<div id="profile" class="tab-content active-tab">
+  <div class="swiper main-swiper">
         <div class="swiper-wrapper">
             <div class="swiper-slide">
                 <div class="container">
@@ -268,37 +268,8 @@
             </div>
         </div>
     </div>
-</div>
+</div> 
 
-<div id="current" class="tab-content">
-    <div class="booking-card" id="current-bookings">
-        <h2>Current Bookings</h2>
-        <div class="booking-list" id="current-booking-list">
-          <div id="invoice" class="container mt-5">  
-            <div id="invoice-items" class="container"></div>          
-          </div>
-          
-          <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.6.0/jspdf.umd.min.js"></script>        
-        </div>
-    </div>
-</div>
-
-<div id="history" class="tab-content">
-    <div class="booking-card" id="rental-history">
-        <h2>Rental History</h2>
-        <div class="booking-list" id="rental-history-list">
-        </div>
-    </div>
-    <div id=classList></div>
-</div>
-   
-</section>
-
-
-
-
-
- 
 
      <div id="footer-bottom">
     <div class="container">

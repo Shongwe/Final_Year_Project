@@ -140,6 +140,8 @@ async function addToCart(vehicle) {
 
     const startDate = document.getElementById("start-date").value;
     const endDate = document.getElementById("end-date").value;
+    const dropOff = document.getElementById("dropoff-location").value;
+    const pickUp = document.getElementById("pickup-location").value;
 
     if (!startDate || !endDate) {
         displayErrorMessage("Both start and end dates must be selected.");
@@ -159,10 +161,12 @@ async function addToCart(vehicle) {
     console.log(vehicle.dailyRate);
     console.log(startDates);
     console.log(endDates);
+    console.log(pickUp);
+    console.log(dropOff); 
     clearErrorMessage(); 
 
 
-    const url =`http://localhost/MiniProjectAPI/api/Cart/${encodedUserId}/add-item?vehicleId=${vehicle.vehicleId}&dailyRate=${vehicle.dailyRate}&startDate=${startDates}&endDate=${endDates}`;
+    const url =`http://localhost/MiniProjectAPI/api/Cart/${encodedUserId}/add-item?vehicleId=${vehicle.vehicleId}&dailyRate=${vehicle.dailyRate}&startDate=${startDates}&endDate=${endDates}&pickup=${pickUp}&dropOff=${dropOff}`;
     
     try {
         const response = await fetch(url, {

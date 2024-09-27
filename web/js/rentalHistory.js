@@ -11,8 +11,6 @@ document.addEventListener('DOMContentLoaded', function () {
         } else {
             validateToken(token);
             setupAccountIcons();
-            fetchUserData(getUserIdFromToken(token),token);
-
         }
     }
 
@@ -29,34 +27,34 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 $(document).ready(function () {
-    
     var activeTab = localStorage.getItem('activeTab');
-    
     if (activeTab) {
         $('.tab-link').removeClass('active');
         $('.tab-content').removeClass('active-tab');
-        
         $('.tab-link[data-tab="' + activeTab + '"]').addClass('active');
         $('#' + activeTab).addClass('active-tab');
-    } else {
-        $('.tab-link[data-tab="profile"]').addClass('active');
-        $('#profile').addClass('active-tab');
+    }
+    else{
+        $('.tab-link[data-tab="history"]').addClass('active');
+        $('#history').addClass('active-tab');
     }
     
     $('.tab-link').on('click', function (e) {
         var href = $(this).attr('href');
-        var tab = $(this).data('tab');
-
-        if (href === "" || href === "#" || href === undefined) {
+        
+        if (href === "" || href === "#") {
             e.preventDefault();
             $('.tab-link').removeClass('active');
             $('.tab-content').removeClass('active-tab');
-            
+          
             $(this).addClass('active');
+            var tab = $(this).data('tab');
             $('#' + tab).addClass('active-tab');
-            
             localStorage.setItem('activeTab', tab);
-        } else {
+        }
+        else
+        {
+            var tab = $(this).data('tab');
             localStorage.setItem('activeTab', tab);
         }
     });
@@ -133,66 +131,4 @@ function fetchUserData(userId, token) {
     .catch(error => {
         console.error('Error fetching user data:', error);
     });
-}
-
-function populateForm(data) {
-    document.getElementById('firstname').value = data.firstname || '';
-    document.getElementById('lastname').value = data.lastname || '';
-    document.getElementById('phoneNumber').value = data.phoneNumber || '';
-    document.getElementById('email').value = data.email || '';
-    document.getElementById('address').value = data.address || '';
-    document.getElementById('licenseInfo').value = data.licenseInfo || '';
-    document.getElementById('userName').value = data.userName || '';
-}
-
-document.getElementById('registrationForm').addEventListener('submit', function(e) {
-    e.preventDefault(); 
-    
-    var updatedUser = {
-        firstname: document.getElementById('firstname').value,
-        lastname: document.getElementById('lastname').value,
-        address: document.getElementById('address').value,
-        licenseInfo: document.getElementById('licenseInfo').value,
-        email: document.getElementById('email').value,
-        phoneNumber: document.getElementById('phoneNumber').value,
-        userName: document.getElementById('userName').value
-    };
-
-    const token = localStorage.getItem('token');
-    const userId = getUserIdFromToken(token);
-    const encodedUserId = encodeURIComponent(userId);
-    console.log(encodedUserId);
-
-    fetch(`http://localhost/MiniProjectAPI/api/Auth/user/${encodedUserId}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(updatedUser)
-    })
-    .then(response => response.json())
-    .then(data => {
-        document.getElementById('message').innerText = "Profile updated successfully!";
-    })
-    .catch(error => {
-        document.getElementById('message').innerText = "Error updating profile.";
-        console.error('Error updating user:', error);
-    });
-});
-
-function formatDate(dateString) {
-    const date = new Date(dateString);
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    return date.toLocaleDateString(undefined, options);
-}
-
-function getStatusColor(status) {
-    switch (status) {
-        case 'Open': return 'blue';
-        case 'Pending': return 'orange';
-        case 'Checked Out': return 'green';
-        case 'Checked In': return 'gray';
-        default: return 'black';
-    }
 }

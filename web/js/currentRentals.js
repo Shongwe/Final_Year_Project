@@ -11,8 +11,6 @@ document.addEventListener('DOMContentLoaded', function () {
         } else {
             validateToken(token);
             setupAccountIcons();
-            fetchUserData(getUserIdFromToken(token),token);
-
         }
     }
 
@@ -24,39 +22,38 @@ document.addEventListener('DOMContentLoaded', function () {
         if (searchForm.classList.contains('active')) {
             document.getElementById('search-input').focus();
         }
-    });
-
+    }); 
 });
 
 $(document).ready(function () {
-    
     var activeTab = localStorage.getItem('activeTab');
-    
     if (activeTab) {
         $('.tab-link').removeClass('active');
         $('.tab-content').removeClass('active-tab');
-        
         $('.tab-link[data-tab="' + activeTab + '"]').addClass('active');
         $('#' + activeTab).addClass('active-tab');
-    } else {
-        $('.tab-link[data-tab="profile"]').addClass('active');
-        $('#profile').addClass('active-tab');
+    }
+    else{
+        $('.tab-link[data-tab="current"]').addClass('active');
+        $('#current').addClass('active-tab');
     }
     
     $('.tab-link').on('click', function (e) {
         var href = $(this).attr('href');
-        var tab = $(this).data('tab');
-
-        if (href === "" || href === "#" || href === undefined) {
+        
+        if (href === "" || href === "#") {
             e.preventDefault();
             $('.tab-link').removeClass('active');
             $('.tab-content').removeClass('active-tab');
-            
+          
             $(this).addClass('active');
+            var tab = $(this).data('tab');
             $('#' + tab).addClass('active-tab');
-            
             localStorage.setItem('activeTab', tab);
-        } else {
+        }
+        else
+        {
+            var tab = $(this).data('tab');
             localStorage.setItem('activeTab', tab);
         }
     });
@@ -135,50 +132,93 @@ function fetchUserData(userId, token) {
     });
 }
 
-function populateForm(data) {
-    document.getElementById('firstname').value = data.firstname || '';
-    document.getElementById('lastname').value = data.lastname || '';
-    document.getElementById('phoneNumber').value = data.phoneNumber || '';
-    document.getElementById('email').value = data.email || '';
-    document.getElementById('address').value = data.address || '';
-    document.getElementById('licenseInfo').value = data.licenseInfo || '';
-    document.getElementById('userName').value = data.userName || '';
-}
-
-document.getElementById('registrationForm').addEventListener('submit', function(e) {
-    e.preventDefault(); 
-    
-    var updatedUser = {
-        firstname: document.getElementById('firstname').value,
-        lastname: document.getElementById('lastname').value,
-        address: document.getElementById('address').value,
-        licenseInfo: document.getElementById('licenseInfo').value,
-        email: document.getElementById('email').value,
-        phoneNumber: document.getElementById('phoneNumber').value,
-        userName: document.getElementById('userName').value
-    };
-
+document.addEventListener('DOMContentLoaded', async () => {
     const token = localStorage.getItem('token');
     const userId = getUserIdFromToken(token);
-    const encodedUserId = encodeURIComponent(userId);
-    console.log(encodedUserId);
 
-    fetch(`http://localhost/MiniProjectAPI/api/Auth/user/${encodedUserId}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(updatedUser)
-    })
-    .then(response => response.json())
-    .then(data => {
-        document.getElementById('message').innerText = "Profile updated successfully!";
-    })
-    .catch(error => {
-        document.getElementById('message').innerText = "Error updating profile.";
-        console.error('Error updating user:', error);
-    });
+    const invoiceContainer = document.getElementById('invoice-items');
+
+    invoiceContainer.innerHTML = `<div class="text-center">Loading invoice data...</div>`;
+
+    try {
+        const response = await fetch(`http://localhost/MiniProjectAPI/api/Cart/${userId}/invoice`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch invoice data.');
+        }
+
+        const data = await response.json();
+        const carts = data.cartItems;
+
+        if (carts.length === 0) {
+            invoiceContainer.innerHTML = `<div class="text-center">No pending carts found.</div>`;
+            downloadButton.disabled = true;
+            return;
+        }
+
+        invoiceContainer.innerHTML = '';  
+        carts.forEach((cart, cartIndex) => {
+            const cartWrapper = document.createElement('div'); 
+            cartWrapper.classList.add('mb-5'); 
+        
+            const cartHeader = document.createElement('h3');
+            const formattedDate = formatDate(cart.createdDate);
+
+            cartHeader.innerHTML = `Cart created on : ${formattedDate} Cart status: <span style="color: ${getStatusColor(cart.status)};">${cart.status}</span>`;
+
+            cartWrapper.appendChild(cartHeader); 
+        
+            const table = document.createElement('table');
+            table.classList.add('table', 'table-striped', 'table-bordered', 'mb-4');
+        
+            const tableHead = document.createElement('thead');
+            tableHead.classList.add('thead-dark');
+        
+            tableHead.innerHTML = `
+                <tr>
+                    <th>Item</th>
+                    <th>Vehicle</th>
+                    <th>Registration</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Daily Rate</th>
+                    <th>Total Price</th>
+                </tr>
+            `;
+            table.appendChild(tableHead);
+        
+            const tableBody = document.createElement('tbody');
+            cart.cartItems.forEach((item, itemIndex) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${itemIndex + 1}</td>
+                    <td>${item.vehicleName}</td>
+                    <td>${item.vehicleRegistration}</td>
+                    <td>${new Date(item.startDate).toLocaleDateString()}</td>
+                    <td>${new Date(item.endDate).toLocaleDateString()}</td>
+                    <td>${item.dailyRate.toFixed(2)}</td>
+                    <td>${item.totalPrice.toFixed(2)}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        
+            table.appendChild(tableBody);
+            cartWrapper.appendChild(table);  
+            invoiceContainer.appendChild(cartWrapper);  
+        });
+
+    } catch (error) {
+        console.error('Error loading invoice:', error);
+        invoiceContainer.innerHTML = `
+            <div class="alert alert-danger text-center" role="alert">
+                Failed to load invoice data. Please try again later.
+            </div>`;
+    } 
 });
 
 function formatDate(dateString) {
