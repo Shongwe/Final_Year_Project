@@ -11,7 +11,7 @@ namespace Web_API.Model
 
         public ICollection<Rental> Rentals { get; set; }
         public ICollection<Reservation> Reservations { get; set; }
-        public ICollection<UserCartItem> UserCartItems { get; set; } // Many-to-many relationship
+        public ICollection<CartItem> CartItems { get; set; } 
 
 
     }

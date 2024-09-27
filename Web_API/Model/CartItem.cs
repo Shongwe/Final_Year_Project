@@ -14,8 +14,11 @@
         public double TotalPrice { get; set;}
         public double DailyRate { get; set;}
         public int Deleted { get; set; } = 0;
-
-        public ICollection<UserCartItem> ?UserCartItems { get; set; } 
+        public String Status { get; set; } = "Pending";
+        public string pickUpLocation { get; set; } = string.Empty;
+        public string dropOffLocation { get; set; } = string.Empty;
+        public DateTime? CheckoutDate { get; set; }  
+        public DateTime? ReturnDate { get; set; } 
 
     }
 }

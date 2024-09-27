@@ -21,7 +21,6 @@ namespace Web_API.Data
         public DbSet<AvailabilityPeriod> AvailabilityPeriods { get; set; }
         public DbSet<Cart> Carts { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
-        public DbSet<UserCartItem> UserCartItems { get; set; }
 
 
 
@@ -83,21 +82,11 @@ namespace Web_API.Data
                 .HasForeignKey(ap => ap.VehicleId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<UserCartItem>()
-      .HasKey(uc => new { uc.UserId, uc.CartItemId });
-
-            modelBuilder.Entity<UserCartItem>()
-                .HasOne(uc => uc.User)
-                .WithMany(u => u.UserCartItems)
-                .HasForeignKey(uc => uc.UserId)
+             modelBuilder.Entity<CartItem>()
+                .HasOne(ci => ci.User) 
+                .WithMany(u => u.CartItems) 
+                .HasForeignKey(ci => ci.UserId) 
                 .OnDelete(DeleteBehavior.Restrict); 
-
-            modelBuilder.Entity<UserCartItem>()
-                .HasOne(uc => uc.CartItem)
-                .WithMany(ci => ci.UserCartItems)
-                .HasForeignKey(uc => uc.CartItemId)
-                .OnDelete(DeleteBehavior.Restrict);
-
 
             base.OnModelCreating(modelBuilder);
         }

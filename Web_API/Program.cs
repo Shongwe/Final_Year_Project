@@ -20,6 +20,8 @@ Log.Logger = new LoggerConfiguration()
 builder.Host.UseSerilog();
 
 builder.Services.AddControllers();
+                
+
 builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddCors(options =>

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Drawing;
 using Web_API.Data;
+using Web_API.Dto;
 using Web_API.Model;
 using Web_API.Services;
 using Web_API.ViewModel;
@@ -33,16 +34,44 @@ namespace Web_API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Rental>> PostRental(Rental rental)
+        public async Task<ActionResult<Rental>> PostRental(RentalDto rentalDto)
         {
             if (_dataContext.Rentals == null)
             {
                 return Problem("Entity set 'dataContext.Rentals'  is null.");
             }
+            var user = await _dataContext.Users.FirstOrDefaultAsync(u => u.Id == rentalDto.UserId);
+            if (user == null)
+            {
+                return BadRequest(new { message = "Invalid UserId. User does not exist." });
+            }
+            var vehicleExists = await _dataContext.Vehicles.AnyAsync(v => v.VehicleId == rentalDto.VehicleId);
+            if (!vehicleExists)
+            {
+                return BadRequest("Invalid VehicleId.");
+            }
+
+            var rental = new Rental
+            {
+                UserId = rentalDto.UserId,
+                VehicleId = rentalDto.VehicleId,
+                PickUpDate = rentalDto.PickUpDate,
+                DropOffDate = rentalDto.DropOffDate,
+                TotalCost = rentalDto.TotalCost,
+                MileageAtRental = rentalDto.MileageAtRental,
+                Fuellevel = rentalDto.Fuellevel,
+                ConditionCheck = rentalDto.ConditionCheck,
+                ConditionNotes = rentalDto.ConditionNotes,
+                DepositAmount = rentalDto.DepositAmount,
+                RentalStatus = rentalDto.RentalStatus,
+                PickUpLocation = rentalDto.PickUpLocation,
+                DropOffLocation = rentalDto.DropOffLocation
+            };
+
             _dataContext.Rentals.Add(rental);
             await _dataContext.SaveChangesAsync();
 
-            return CreatedAtAction("GetRental", new { id = rental.RentalId }, rental);
+            return Ok(new { message = "Rental created successfully!" });
         }
 
         [HttpGet("CarsRented")]

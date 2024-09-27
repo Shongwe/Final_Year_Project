@@ -27,6 +27,45 @@ namespace Web_API.Controllers
             _serviceProvider = serviceProvider;
             _dataContext = dataContext;
         }
+        [HttpGet("pending-carts")]
+        public async Task<IActionResult> GetPendingCarts()
+        {
+            var pendingCarts = await _dataContext.Carts
+                .Include(c => c.Cartitems)
+                .Where(c => c.Status == "Pending")
+                .ToListAsync();
+
+            if (pendingCarts == null || pendingCarts.Count == 0)
+            {
+                return NotFound(new { message = "No pending carts found." });
+            }
+
+            var cartDtos = pendingCarts.Select(cart => new CartDto
+            {
+                CartId = cart.CartId,
+                UserId = cart.UserId,
+                CreatedDate = cart.CreatedDate,
+                Status = cart.Status,
+                CheckoutDate = cart.CheckoutDate,
+                AdminUserId = cart.AdminUserId,
+                CartItems = cart.Cartitems?.Select(item => new CartItemDto
+                {
+                    CartItemId = item.CartItemId,
+                    CartId = item.CartId,
+                    UserId = item.UserId,
+                    VehicleId = item.VehicleId,
+                    StartDate = item.StartDate,
+                    EndDate = item.EndDate,
+                    TotalPrice = item.TotalPrice,
+                    DailyRate = item.DailyRate,
+                    PickUpLocation = item.pickUpLocation,
+                    DropOffLocation = item.dropOffLocation,
+                    Status = item.Status
+                }).ToList() ?? new List<CartItemDto>()
+            }).ToList();
+
+            return Ok(cartDtos);
+        }
 
         [HttpGet("{userId}/items")]
         public async Task<IActionResult> GetCartItems(String userId)
@@ -71,7 +110,7 @@ namespace Web_API.Controllers
         }
 
         [HttpPost("{userId}/add-item")]
-        public async Task<IActionResult> AddCartItem(string userId, int vehicleId, double dailyRate, DateTime startDate, DateTime endDate)
+        public async Task<IActionResult> AddCartItem(string userId, int vehicleId, double dailyRate, DateTime startDate, DateTime endDate,string pickup, string dropOff)
         {
             if (startDate >= endDate)
             {
@@ -123,10 +162,12 @@ namespace Web_API.Controllers
                 {
                     CartId = cart.CartId,
                     VehicleId = vehicleId,
-                    UserId= userId, 
+                    UserId = userId,
                     DailyRate = dailyRate,
                     StartDate = startDate,
                     EndDate = endDate,
+                    pickUpLocation = pickup,
+                    dropOffLocation= dropOff,
                     TotalPrice = dailyRate * (endDate - startDate).Days
                 };
 
@@ -232,6 +273,25 @@ namespace Web_API.Controllers
             return Ok(new { message = "Cart item deleted successfully." });
         }
 
+        [HttpPost("items/{itemId}/checkout")]
+        public async Task<IActionResult> CheckoutCartItem(int itemId)
+        {
+            var cartItem = await _dataContext.CartItems
+                .FirstOrDefaultAsync(c => c.CartItemId == itemId && c.Deleted == 0);
+
+            if (cartItem == null)
+            {
+                return NotFound(new { message = "Cart item not found." });
+            }
+
+            cartItem.Status = "Checked Out"; 
+
+            await _dataContext.SaveChangesAsync();
+
+            return Ok(new { message = "Cart item checked out successfully.", cartItem });
+        }
+
+
         [HttpPost("{userId}/checkout")]
         public async Task<IActionResult> CheckoutCart(string userId)
         {
@@ -245,20 +305,33 @@ namespace Web_API.Controllers
             }
 
             cart.Status = "Pending";
+            cart.CheckoutDate = DateTime.Now;
+
             _dataContext.Carts.Update(cart);
             await _dataContext.SaveChangesAsync();
 
             return Ok(new { message = "Cart status updated to Pending." });
         }
-        [HttpPost("{cartId}/check-out")]
+        [HttpPost("{cartId}/check-out-cart")]
         public async Task<IActionResult> CheckOutCart(int cartId)
         {
             var cart = await _dataContext.Carts
-                                          .FirstOrDefaultAsync(c => c.CartId == cartId && c.Status == "Pending");
+                                         .Include(c => c.Cartitems) 
+                                         .FirstOrDefaultAsync(c => c.CartId == cartId && c.Status == "Pending");
 
             if (cart == null)
             {
                 return NotFound(new { message = "No pending cart found with this ID." });
+            }
+
+            if (cart.Cartitems != null)
+            {
+                var allItemsCheckedOut = cart.Cartitems.All(item => item.Status == "Checked Out");
+
+                if (!allItemsCheckedOut)
+                {
+                    return BadRequest(new { message = "Not all cart items are checked out. Please ensure all items are checked out before checking out the cart." });
+                }
             }
 
             cart.Status = "Checked Out";
@@ -267,7 +340,6 @@ namespace Web_API.Controllers
 
             return Ok(new { message = "Cart status updated to Checked Out." });
         }
-
         [HttpPost("{cartId}/check-in")]
         public async Task<IActionResult> CheckInCart(int cartId)
         {
@@ -308,6 +380,44 @@ namespace Web_API.Controllers
                 status=cart.Status,
                 createdDate=cart.CreatedDate,
                 userId =cart.UserId,
+                cartItems = cart.Cartitems.Select(ci => new
+                {
+                    vehicleId = ci.VehicleId,
+                    vehicleName = ci.Vehicle?.Name,
+                    vehicleRegistration = ci.Vehicle?.Registration,
+                    startDate = ci.StartDate,
+                    endDate = ci.EndDate,
+                    dailyRate = ci.DailyRate,
+                    totalPrice = ci.TotalPrice
+                }).ToList()
+            }).ToList();
+
+            return Ok(new { cartItems = invoiceItems });
+        }
+        [HttpGet("{userId}/carts")]
+        public async Task<IActionResult> GetCarts(string userId)
+        {
+            var validStatuses = new[] { "Open", "Pending", "Checked Out" };
+
+
+            var carts = await _dataContext.Carts
+                               .Include(c => c.Cartitems)
+                               .ThenInclude(ci => ci.Vehicle)
+                               .Where(c => c.UserId == userId && validStatuses.Contains(c.Status))
+                               .OrderByDescending(c => c.CreatedDate)
+                               .ToListAsync();
+
+            if (carts == null || carts.Count == 0)
+            {
+                return NotFound(new { message = "No pending cart found for this user." });
+            }
+
+            var invoiceItems = carts.Select(cart => new
+            {
+                cartId = cart.CartId,
+                status = cart.Status,
+                createdDate = cart.CreatedDate,
+                userId = cart.UserId,
                 cartItems = cart.Cartitems.Select(ci => new
                 {
                     vehicleId = ci.VehicleId,
