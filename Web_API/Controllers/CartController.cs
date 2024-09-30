@@ -66,6 +66,125 @@ namespace Web_API.Controllers
 
             return Ok(cartDtos);
         }
+        [HttpGet("checked-out-carts")]
+        public async Task<IActionResult> GetCheckedOutCarts()
+        {
+            var pendingCarts = await _dataContext.Carts
+                .Include(c => c.Cartitems)
+                .Where(c => c.Status == "Checked out")
+                .ToListAsync();
+
+            if (pendingCarts == null || pendingCarts.Count == 0)
+            {
+                return NotFound(new { message = "No Checked out carts found." });
+            }
+
+            var cartDtos = pendingCarts.Select(cart => new CartDto
+            {
+                CartId = cart.CartId,
+                UserId = cart.UserId,
+                CreatedDate = cart.CreatedDate,
+                Status = cart.Status,
+                CheckoutDate = cart.CheckoutDate,
+                AdminUserId = cart.AdminUserId,
+                CartItems = cart.Cartitems?.Select(item => new CartItemDto
+                {
+                    CartItemId = item.CartItemId,
+                    CartId = item.CartId,
+                    UserId = item.UserId,
+                    VehicleId = item.VehicleId,
+                    StartDate = item.StartDate,
+                    EndDate = item.EndDate,
+                    TotalPrice = item.TotalPrice,
+                    DailyRate = item.DailyRate,
+                    PickUpLocation = item.pickUpLocation,
+                    DropOffLocation = item.dropOffLocation,
+                    Status = item.Status
+                }).ToList() ?? new List<CartItemDto>()
+            }).ToList();
+
+            return Ok(cartDtos);
+        }
+
+        [HttpGet("checked-in-carts")]
+        public async Task<IActionResult> GetCheckedInCarts()
+        {
+            var pendingCarts = await _dataContext.Carts
+                .Include(c => c.Cartitems)
+                .Where(c => c.Status == "Checked in")
+                .ToListAsync();
+
+            if (pendingCarts == null || pendingCarts.Count == 0)
+            {
+                return NotFound(new { message = "No Checked in carts found." });
+            }
+
+            var cartDtos = pendingCarts.Select(cart => new CartDto
+            {
+                CartId = cart.CartId,
+                UserId = cart.UserId,
+                CreatedDate = cart.CreatedDate,
+                Status = cart.Status,
+                CheckoutDate = cart.CheckoutDate,
+                AdminUserId = cart.AdminUserId,
+                CartItems = cart.Cartitems?.Select(item => new CartItemDto
+                {
+                    CartItemId = item.CartItemId,
+                    CartId = item.CartId,
+                    UserId = item.UserId,
+                    VehicleId = item.VehicleId,
+                    StartDate = item.StartDate,
+                    EndDate = item.EndDate,
+                    TotalPrice = item.TotalPrice,
+                    DailyRate = item.DailyRate,
+                    PickUpLocation = item.pickUpLocation,
+                    DropOffLocation = item.dropOffLocation,
+                    Status = item.Status
+                }).ToList() ?? new List<CartItemDto>()
+            }).ToList();
+
+            return Ok(cartDtos);
+        }
+
+        [HttpGet("closed-carts")]
+        public async Task<IActionResult> GetClosedCarts()
+        {
+            var pendingCarts = await _dataContext.Carts
+                .Include(c => c.Cartitems)
+                .Where(c => c.Status == "Closed")
+                .ToListAsync();
+
+            if (pendingCarts == null || pendingCarts.Count == 0)
+            {
+                return NotFound(new { message = "No Closed carts found." });
+            }
+
+            var cartDtos = pendingCarts.Select(cart => new CartDto
+            {
+                CartId = cart.CartId,
+                UserId = cart.UserId,
+                CreatedDate = cart.CreatedDate,
+                Status = cart.Status,
+                CheckoutDate = cart.CheckoutDate,
+                AdminUserId = cart.AdminUserId,
+                CartItems = cart.Cartitems?.Select(item => new CartItemDto
+                {
+                    CartItemId = item.CartItemId,
+                    CartId = item.CartId,
+                    UserId = item.UserId,
+                    VehicleId = item.VehicleId,
+                    StartDate = item.StartDate,
+                    EndDate = item.EndDate,
+                    TotalPrice = item.TotalPrice,
+                    DailyRate = item.DailyRate,
+                    PickUpLocation = item.pickUpLocation,
+                    DropOffLocation = item.dropOffLocation,
+                    Status = item.Status
+                }).ToList() ?? new List<CartItemDto>()
+            }).ToList();
+
+            return Ok(cartDtos);
+        }
 
         [HttpGet("{userId}/items")]
         public async Task<IActionResult> GetCartItems(String userId)
@@ -290,6 +409,74 @@ namespace Web_API.Controllers
 
             return Ok(new { message = "Cart item checked out successfully.", cartItem });
         }
+        [HttpPost("items/{itemId}/checkedin")]
+        public async Task<IActionResult> CheckInCartItem(int itemId, [FromBody] CheckInDto checkInData)
+        {
+            var cartItem = await _dataContext.CartItems
+                .FirstOrDefaultAsync(c => c.CartItemId == itemId && c.Deleted == 0);
+
+            if (cartItem == null)
+            {
+                return NotFound(new { message = "Cart item not found." });
+            }
+
+            cartItem.Status = "Checked in";
+
+            var vehicle = await _dataContext.Vehicles.FindAsync(cartItem.VehicleId);
+
+            if (vehicle == null)
+                return NotFound("Vehicle not found.");
+
+            var rental = await _dataContext.Rentals
+              .Where(r => r.VehicleId == checkInData.VehicleId
+                       && r.PickUpDate == checkInData.PickUpDate
+                       && r.DropOffDate == checkInData.DropOffDate
+                       && r.RentalStatus == "Checked Out")
+              .FirstOrDefaultAsync();
+
+            if (rental == null)
+                return BadRequest("No active rental found for this vehicle.");
+
+            rental.RentalStatus = "Checked In";
+            rental.MileageAtReturn = checkInData.MileageAtReturn;
+            rental.FuelLevelAtReturn = checkInData.FuelLevelAtReturn;
+            rental.ConditionNotesAtReturn = checkInData.ConditionNotesAtReturn;
+            rental.ReturnDate = DateTime.Now;
+
+            _dataContext.Rentals.Update(rental);
+            await _dataContext.SaveChangesAsync();
+
+            return Ok(new { message = "Cart item checked in successfully.", cartItem });
+        }
+
+        [HttpPost("api/Vehicle/{id}/checkin")]
+        public async Task<IActionResult> CheckInRental(int id, [FromBody] CheckInDto checkInData)
+        {
+            var vehicle = await _dataContext.Vehicles.FindAsync(id);
+            if (vehicle == null)
+                return NotFound("Vehicle not found.");
+
+            var rental = await _dataContext.Rentals
+              .Where(r => r.VehicleId == checkInData.VehicleId
+                       && r.PickUpDate == checkInData.PickUpDate
+                       && r.DropOffDate == checkInData.DropOffDate
+                       && r.RentalStatus == "Checked Out")
+              .FirstOrDefaultAsync();
+
+            if (rental == null)
+                return BadRequest("No active rental found for this vehicle.");
+
+            rental.RentalStatus = "Checked In";
+            rental.MileageAtReturn = checkInData.MileageAtReturn;
+            rental.FuelLevelAtReturn = checkInData.FuelLevelAtReturn;
+            rental.ConditionNotesAtReturn = checkInData.ConditionNotesAtReturn;
+            rental.ReturnDate = DateTime.Now;
+
+            _dataContext.Rentals.Update(rental);
+            await _dataContext.SaveChangesAsync();
+
+            return Ok("Vehicle checked in successfully.");
+        }
 
 
         [HttpPost("{userId}/checkout")]
@@ -344,7 +531,7 @@ namespace Web_API.Controllers
         public async Task<IActionResult> CheckInCart(int cartId)
         {
             var cart = await _dataContext.Carts
-                                          .FirstOrDefaultAsync(c => c.CartId == cartId && c.Status == "Checked Out");
+                      .FirstOrDefaultAsync(c => c.CartId == cartId && c.Status == "Checked Out");
 
             if (cart == null)
             {
@@ -397,7 +584,7 @@ namespace Web_API.Controllers
         [HttpGet("{userId}/carts")]
         public async Task<IActionResult> GetCarts(string userId)
         {
-            var validStatuses = new[] { "Open", "Pending", "Checked Out" };
+            var validStatuses = new[] { "Open", "Pending", "Checked Out","Checked in", "Closed" };
 
 
             var carts = await _dataContext.Carts
@@ -432,6 +619,38 @@ namespace Web_API.Controllers
 
             return Ok(new { cartItems = invoiceItems });
         }
+
+
+        [HttpPost("payment/{rentalId}/")]
+        public async Task<IActionResult> MakePayment(int rentalId, [FromBody] PaymentDto paymentDto)
+        {
+            var rental = await _dataContext.Rentals.Include(r => r.Payments)
+                            .FirstOrDefaultAsync(r => r.RentalId == rentalId);
+
+            if (rental == null)
+                return NotFound("Rental not found.");
+
+            if (paymentDto.AmountPaid != rental.TotalCost)
+                return BadRequest("Payment amount does not match the rental total.");
+
+            var payment = new Payment
+            {
+                RentalId = rentalId,
+                AmountPaid = paymentDto.AmountPaid,
+                PaymentMethod = paymentDto.PaymentMethod,
+                PaymentStatus = "Completed",
+                PaymentDate = DateTime.Now
+            };
+
+            rental.Payments.Add(payment);
+            rental.RentalStatus = "Paid"; 
+
+            _dataContext.Payments.Add(payment);
+            await _dataContext.SaveChangesAsync();
+
+            return Ok("Payment made successfully.");
+        }
+
         private bool CartExists(int id)
         {
             return (_dataContext.Carts?.Any(e => e.CartId == id)).GetValueOrDefault();

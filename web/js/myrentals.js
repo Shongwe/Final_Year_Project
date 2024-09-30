@@ -76,7 +76,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     const userId = getUserIdFromToken(token);
 
     const invoiceContainer = document.getElementById('invoice-items');
-    const downloadButton = document.getElementById('download-pdf');
     const doneButton = document.getElementById('done-btn');
 
     invoiceContainer.innerHTML = `<div class="text-center">Loading invoice data...</div>`;
@@ -98,7 +97,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (carts.length === 0) {
             invoiceContainer.innerHTML = `<div class="text-center">No pending carts found.</div>`;
-            downloadButton.disabled = true;
             return;
         }
 
@@ -106,22 +104,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         carts.forEach((cart, cartIndex) => {
             const cartWrapper = document.createElement('div'); 
             cartWrapper.classList.add('mb-5'); 
-        
+            
             const cartHeader = document.createElement('h3');
-            console.log(cart.createdDate);
-
             const formattedDate = formatDate(cart.createdDate);
 
             cartHeader.innerHTML = `Cart created on : ${formattedDate} Cart status: <span style="color: ${getStatusColor(cart.status)};">${cart.status}</span>`;
-
             cartWrapper.appendChild(cartHeader); 
-        
+            
             const table = document.createElement('table');
             table.classList.add('table', 'table-striped', 'table-bordered', 'mb-4');
-        
+
             const tableHead = document.createElement('thead');
             tableHead.classList.add('thead-dark');
-        
+
             tableHead.innerHTML = `
                 <tr>
                     <th>Item</th>
@@ -134,9 +129,30 @@ document.addEventListener('DOMContentLoaded', async () => {
                 </tr>
             `;
             table.appendChild(tableHead);
-        
+
             const tableBody = document.createElement('tbody');
+            const rentalPromises = []; 
+
             cart.cartItems.forEach((item, itemIndex) => {
+                if(item != null) {
+                    const fetchRentalIdPromise = fetch(`http://localhost/MiniProjectAPI/api/Rental/by-date-and-vehicle?startDate=${new Date(item.startDate).toISOString()}&endDate=${new Date(item.endDate).toISOString()}&vehicleId=${item.vehicleId}`)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error(`Failed to fetch rental ID for vehicle ID: ${item.vehicleId}`);
+                            }
+                            return response.json(); 
+                        })
+                        .then(rentalData => {
+                            console.log(`Rental ID for vehicle ${item.vehicleId}: ${rentalData.rentalId}`); 
+                            return rentalData.rentalId; 
+                        })
+                        .catch(error => {
+                            console.error('Error fetching rental ID:', error);
+                        });
+                    
+                    rentalPromises.push(fetchRentalIdPromise); 
+                }
+
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${itemIndex + 1}</td>
@@ -149,15 +165,32 @@ document.addEventListener('DOMContentLoaded', async () => {
                 `;
                 tableBody.appendChild(row);
             });
-        
+
             table.appendChild(tableBody);
             cartWrapper.appendChild(table);  
-            invoiceContainer.appendChild(cartWrapper);  
-        });
 
-        downloadButton.disabled = false;
-        downloadButton.addEventListener('click', () => {
-            generatePDF(carts);
+            Promise.all(rentalPromises)
+            .then(rentalIds => {
+              //  console.log('All rental IDs fetched successfully:', rentalIds);
+                
+                const rentalIdArray = rentalIds.map(rental => rental.rentalId);
+                console.log('Extracted Rental IDs:', rentalIdArray);
+            })
+            .catch(error => {
+                console.error('Error fetching rental IDs:', error);
+            });
+
+            if (cart.status === "Checked In") {
+                const paymentButton = document.createElement('button');
+                paymentButton.classList.add('btn', 'btn-success');
+                paymentButton.innerText = 'Make Payment';
+                paymentButton.addEventListener('click', () => {
+                    makePayment(cart.rentalId); 
+                });
+                cartWrapper.appendChild(paymentButton);
+            }
+
+            invoiceContainer.appendChild(cartWrapper);  
         });
 
     } catch (error) {
@@ -169,10 +202,40 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     doneButton.addEventListener('click', () => {
-        window.location.href = '../pages/index.html';
+        window.location.href = '../index.html';
     });
 });
 
+
+
+async function makePayment(rentalId) {
+    const paymentDetails = {
+        AmountPaid: 100, 
+        PaymentMethod: "Credit Card" 
+    };
+
+
+    try {
+        const response = await fetch(`http://localhost/MiniProjectAPI/api/Cart/payment/${rentalId}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem('token')}`
+            },
+            body: JSON.stringify(paymentDetails)
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+            alert("Payment made successfully.");
+        } else {
+            alert(`Payment failed: ${result}`);
+        }
+    } catch (error) {
+        console.error("Error during payment :", error);
+        alert("An error occurred while processing the payment.");
+    }
+}
 
 function getUserIdFromToken(token) {
     const payloadBase64 = token.split('.')[1];
@@ -261,9 +324,11 @@ function getStatusColor(status) {
     } else if (status === 'Open') {
       return 'blue';
     } else if (status === 'Checked Out') {
-      return 'green';
-    } else if (status === 'Checked In') {
       return 'red';
+    } else if (status === 'Checked In' ) {
+      return 'yellow';
+    }else if (status === 'Closed') {
+        return 'green';
     }
   }
 

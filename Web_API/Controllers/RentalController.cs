@@ -32,6 +32,27 @@ namespace Web_API.Controllers
             }
             return await _dataContext.Rentals.ToListAsync();
         }
+        [HttpGet("by-date-and-vehicle")]
+        public async Task<ActionResult<IEnumerable<Rental>>> GetRentalsByDateAndVehicle([FromQuery] DateTime startDate, [FromQuery] DateTime endDate,[FromQuery] int vehicleId)
+        {
+            if (_dataContext.Rentals == null)
+            {
+                return NotFound();
+            }
+
+            var rentals = await _dataContext.Rentals
+                .Where(r => r.VehicleId == vehicleId
+                    && r.PickUpDate.Date == startDate.Date
+                    && r.DropOffDate.Date == endDate.Date)
+                .ToListAsync();
+
+            if (rentals.Count == 0)
+            {
+                return NotFound("No rentals found for the specified criteria.");
+            }
+
+            return Ok(rentals);
+        }
 
         [HttpPost]
         public async Task<ActionResult<Rental>> PostRental(RentalDto rentalDto)

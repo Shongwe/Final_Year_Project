@@ -234,11 +234,12 @@ async function getPendingCarts() {
         });
 
         if (!response.ok) {
+            cartBody.innerHTML = '<tr><td colspan="5" class="text-center">No pending carts available.</td></tr>';
+
             throw new Error(`HTTP error! status: ${response.status}`);
         }
 
         const data = await response.json();
-        console.log(data);
        
 
         populateCartTable(data);

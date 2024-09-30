@@ -16,5 +16,9 @@
         public string RentalStatus { get; set; } = string.Empty;
         public string PickUpLocation { get; set; } = string.Empty;
         public string DropOffLocation { get; set; } = string.Empty;
+        public int MileageAtReturn { get; set; }  
+        public string FuelLevelAtReturn { get; set; } = string.Empty;  
+        public string ConditionAtReturn { get; set; } = string.Empty;  
+        public DateTime? ReturnDate { get; set; } 
     }
 }

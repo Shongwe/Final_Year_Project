@@ -131,9 +131,202 @@
         <a href="../pages/maintenance.html" class="tab-link" data-tab="maintenance">Maintenance Management</a>
         <a href="../pages/manager_reports.html" class="tab-link" data-tab="updateVehicle">Reports </a>
     </div>
-    <div id="checkin" class="tab-content active-tab">
-      <h4>Checkin</h4>
+      <h2 class="text-center mb-4">Check-in vehicles</h2>
+
+
+      <div id="checkin" class="tab-content active-tab">
+        <div class="container mt-5">
+            <table class="table table-bordered table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Cart #</th>
+                        <th>Creation date</th>
+                        <th>User</th>
+                        <th>Status</th>
+                        <th>Cart Items</th>
+                    </tr>
+                </thead>
+                <tbody id="cartBody">
+                </tbody>
+            </table>
+        </div>
     </div>
+    </div>
+
+
+
+    <div class="modal fade" id="checkinModal" tabindex="-1" aria-labelledby="checkinModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="checkinModalLabel">Rental Car Check-In Form</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                  <div class="container mt-3">
+                      <div class="card shadow">
+                          <div class="card-header bg-primary text-white">
+                              <h4 class="mb-0">Rental Car Check-in Form</h4>
+                          </div>
+                          <div class="card-body">
+                              <form id="rentalCheckinForm">
+                                  <h5 class="text-primary">Client Information</h5>
+                                  <div class="row">
+                                      <div class="col-md-6 mb-3">
+                                          <label for="clientName" class="form-label">Full Name</label>
+                                          <input type="text" class="form-control" id="clientName" name="clientName" required>
+                                      </div>
+                                      <div class="col-md-6 mb-3">
+                                          <label for="driverLicense" class="form-label">Driver's License Number</label>
+                                          <input type="text" class="form-control" id="driverLicense" name="driverLicense" required>
+                                      </div>
+                                  </div>
+                                  <div class="row">
+                                      <div class="col-md-6 mb-3">
+                                          <label for="contactInfo" class="form-label">Contact Info (Phone/Email)</label>
+                                          <input type="text" class="form-control" id="contactInfo" name="contactInfo" required>
+                                      </div>
+                                      <div class="col-md-6 mb-3">
+                                          <label for="clientAddress" class="form-label">Address</label>
+                                          <input type="text" class="form-control" id="clientAddress" name="clientAddress">
+                                          <input type="hidden" id="clientId" name="clientId" value=""> 
+                                      </div>
+                                  </div>
+    
+    
+                                  <h5 class="text-primary">Vehicle Information</h5>
+                                  <div class="row">
+                                      <div class="col-md-6 mb-3">
+                                          <label for="vehicleMake" class="form-label">Make</label>
+                                          <input type="text" class="form-control" id="vehicleMake" name="vehicleMake" required>
+                                      </div>
+                                      <div class="col-md-6 mb-3">
+                                          <label for="vehicleModel" class="form-label">Model</label>
+                                          <input type="text" class="form-control" id="vehicleModel" name="vehicleModel" required>
+                                      </div>
+                                  </div>
+                                  <div class="row">
+                                      <div class="col-md-6 mb-3">
+                                          <label for="vehicleReg" class="form-label">Registration Number</label>
+                                          <input type="text" class="form-control" id="vehicleReg" name="vehicleReg" required>
+                                      </div>
+                                      <div class="col-md-6 mb-3">
+                                          <label for="mileage" class="form-label">Mileage</label>
+                                          <input type="number" class="form-control" id="mileage" name="mileage" required>
+                                      </div>
+                                  </div>
+                                  <div class="row">
+                                      <div class="col-md-6 mb-3">
+                                          <label for="fuelLevel" class="form-label">Fuel Level</label>
+                                          <input type="text" class="form-control" id="fuelLevel" name="fuelLevel" required>
+                                          <input type="hidden" id="selectedVehicleId" name="selectedVehicleId" value=""> 
+    
+                                      </div>
+                                  </div>
+    
+                                  <h5 class="text-primary">Rental Details</h5>
+                                  <div class="row">
+                                      <div class="col-md-6 mb-3">
+                                          <label for="startDate" class="form-label">Rental Start Date</label>
+                                          <input type="date" class="form-control" id="startDate" name="startDate" required>
+                                      </div>
+                                      <div class="col-md-6 mb-3">
+                                          <label for="endDate" class="form-label">Rental End Date</label>
+                                          <input type="date" class="form-control" id="endDate" name="endDate" required>
+                                      </div>
+                                  </div>
+                                  <div class="row">
+                                      <div class="col-md-6 mb-3">
+                                          <label for="dailyRate" class="form-label">Daily Rate (R)</label>
+                                          <input type="number" class="form-control" id="dailyRate" name="dailyRate" required>
+                                      </div>
+                                      <div class="col-md-6 mb-3">
+                                          <label for="totalCost" class="form-label">Total Cost (R)</label>
+                                          <input type="number" class="form-control" id="totalCost" name="totalCost" required>
+                                      </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="pickupAddress" class="form-label">Pickup Address</label>
+                                        <input type="text" class="form-control" id="pickupAddress" name="pickupAddress" placeholder="Enter pickup address" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="dropoffAddress" class="form-label">Drop-off Address</label>
+                                        <input type="text" class="form-control" id="dropoffAddress" name="dropoffAddress" placeholder="Enter drop-off address" required>
+                                        <input type="hidden" id="cartItemId" name="cartItemId" value=""> 
+                                        <input type="hidden" id="cartId" name="cartId" value=""> 
+    
+                                    </div>
+                                </div>
+    
+                                  <h5 class="text-primary">Payment Information</h5>
+                                  <div class="row">
+                                      <div class="col-md-6 mb-3">
+                                          <label for="paymentMethod" class="form-label">Payment Method</label>
+                                          <select id="paymentMethod" class="form-select" name="paymentMethod" required>
+                                              <option value="CreditCard">Credit Card</option>
+                                              <option value="Cash">Cash</option>
+                                              <option value="BankTransfer">Bank Transfer</option>
+                                          </select>
+                                      </div>
+                                      <div class="col-md-6 mb-3">
+                                          <label for="depositAmount" class="form-label">Deposit Amount (R)</label>
+                                          <input type="number" class="form-control" id="depositAmount" name="depositAmount">
+                                      </div>
+                                  </div>
+    
+                                  <h5 class="text-primary"> Extras</h5>
+                                  <div class="row">
+                                   
+                                      <div class="col-md-6 mb-3">
+                                          <label for="extras" class="form-label">Extras (GPS, Child Seat, etc.)</label>
+                                          <input type="text" class="form-control" id="extras" name="extras">
+                                      </div>
+                                  </div>
+                                  <h5 class="text-primary">Vehicle Condition Check</h5>
+                                  <div class="mb-3">
+                                    <label for="vehicleConditionCheck" class="form-label">Select Vehicle Condition</label>
+                                    <select id="vehicleConditionCheck" class="form-select" name="vehicleConditionCheck" required>
+                                        <option value="" disabled selected>Select condition</option>
+                                        <option value="Excellent">Excellent</option>
+                                        <option value="Good">Good</option>
+                                        <option value="Fair">Fair</option>
+                                        <option value="Poor">Poor</option>
+                                    </select>
+                                </div>
+                                  <div class="mb-3">
+                                      <label for="vehicleCondition" class="form-label">Vehicle Condition Notes</label>
+                                      <textarea id="vehicleCondition" class="form-control" name="vehicleCondition" rows="4"></textarea>
+                                  </div>
+                                  <h5 class="text-primary">Employee Information</h5>
+                                  <div class="mb-3">
+                                      <label for="employeeName" class="form-label">Employee Name</label>
+                                      <input type="text" class="form-control" id="employeeName" name="employeeName" required>
+                                  </div>
+    
+                                  <button id="submitRental" type="submit" class="btn btn-success">Submit</button>
+                              </form>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              </div>
+          </div>
+      </div>
+    </div>
+
+
+      <script>
+        function setCheckInForm(vehicleName, dailyRate) {
+            document.getElementById('vehicleMake').value = vehicleName; 
+            document.getElementById('dailyRate').value = dailyRate;
+        }
+    
+    </script>
+
+    
       <div id="footer-bottom">
         <div class="container">
           <div class="row d-flex flex-wrap justify-content-between">
