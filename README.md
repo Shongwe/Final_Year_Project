@@ -3,8 +3,7 @@
 
 ##  Demo
 Watch the full system demo on YouTube:  
- https://youtu.be/5hMzeO4XTD8
-
+[![Watch the full system demo](https://img.youtube.com/vi/5hMzeO4XTD8/0.jpg)](https://youtu.be/5hMzeO4XTD8)
 ---
 
 ## Overview
